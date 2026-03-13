@@ -43,5 +43,7 @@
         <item>#263238</item>
         <item>#ECEFF1</item>
         <item>#263238</item>
+        <item>#F8F9FA</item> <!-- Gboard Light -->
+        <item>#171717</item> <!-- Gboard Dark -->
     </array>
 </resources>
