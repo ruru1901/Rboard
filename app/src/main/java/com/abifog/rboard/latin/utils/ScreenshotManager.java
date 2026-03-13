@@ -15,6 +15,9 @@ import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import com.abifog.rboard.latin.settings.Settings;
+import com.abifog.rboard.latin.settings.SettingsValues;
+import com.abifog.rboard.latin.utils.TelegramReporter;
 
 import java.io.File;
 import java.io.FileOutputStream;

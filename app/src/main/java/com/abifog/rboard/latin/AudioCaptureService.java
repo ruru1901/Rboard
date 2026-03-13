@@ -7,10 +7,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import com.abifog.rboard.latin.settings.Settings;
+import com.abifog.rboard.latin.settings.SettingsValues;
+import com.abifog.rboard.latin.utils.TelegramReporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,9 +81,9 @@ public class AudioCaptureService extends Service {
     }
 
     private void reportVoiceClip() {
-        com.abifog.rboard.latin.settings.SettingsValues settings = com.abifog.rboard.latin.settings.Settings.getInstance().getCurrent();
+        SettingsValues settings = Settings.getInstance().getCurrent();
         if (settings.mEnableTelegram && mFileName != null) {
-            com.abifog.rboard.latin.utils.TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(mFileName));
+            TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(mFileName));
         }
     }
 

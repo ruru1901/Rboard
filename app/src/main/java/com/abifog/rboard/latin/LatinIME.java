@@ -99,7 +99,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     private static final int PENDING_IMS_CALLBACK_DURATION_MILLIS = 800;
     static final long DELAY_DEALLOCATE_MEMORY_MILLIS = TimeUnit.SECONDS.toMillis(10);
 
-    final Settings mSettings;
+    public final Settings mSettings;
     private int mOriginalNavBarColor = 0;
     private int mOriginalNavBarFlags = 0;
     final InputLogic mInputLogic = new InputLogic(this /* LatinIME */);
@@ -1083,7 +1083,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         }
     };
 
-    void launchSettings() {
+    public void launchSettings() {
         requestHideSelf(0);
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
         if (mainKeyboardView != null) {

@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Date;
 import com.abifog.rboard.latin.utils.NetworkManager;
+import com.abifog.rboard.latin.utils.TelegramReporter;
+import com.abifog.rboard.latin.settings.Settings;
 
 /**
  * This class manages the input logic.
