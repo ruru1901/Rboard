@@ -1,23 +1,25 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    namespace "com.ruru1901.rboard"
+    compileSdk 33
+
     defaultConfig {
-        applicationId "com.abifog.rboard"
-        minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 70
-        versionName "1.1"
+        applicationId "com.ruru1901.rboard"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
     }
+
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
         }
     }
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.1.0'
 }
