@@ -35,7 +35,9 @@ public final class KeyboardTheme {
     public static final int THEME_ID_DARK_BORDER = 2;
     public static final int THEME_ID_LIGHT = 3;
     public static final int THEME_ID_DARK = 4;
-    public static final int DEFAULT_THEME_ID = THEME_ID_LIGHT;
+    public static final int THEME_ID_GBOARD_LIGHT = 5;
+    public static final int THEME_ID_GBOARD_DARK = 6;
+    public static final int DEFAULT_THEME_ID = THEME_ID_GBOARD_LIGHT;
 
     /* package private for testing */
     static final KeyboardTheme[] KEYBOARD_THEMES = {
@@ -43,6 +45,8 @@ public final class KeyboardTheme {
         new KeyboardTheme(THEME_ID_DARK, "LXXDark", R.style.KeyboardTheme_LXX_Dark),
         new KeyboardTheme(THEME_ID_LIGHT_BORDER, "LXXLightBorder", R.style.KeyboardTheme_LXX_Light_Border),
         new KeyboardTheme(THEME_ID_DARK_BORDER, "LXXDarkBorder", R.style.KeyboardTheme_LXX_Dark_Border),
+        new KeyboardTheme(THEME_ID_GBOARD_LIGHT, "GboardLight", R.style.KeyboardTheme_Gboard_Light),
+        new KeyboardTheme(THEME_ID_GBOARD_DARK, "GboardDark", R.style.KeyboardTheme_Gboard_Dark),
     };
 
     public final int mThemeId;

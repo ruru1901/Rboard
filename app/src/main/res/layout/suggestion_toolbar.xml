@@ -9,52 +9,71 @@
     android:background="@color/gboard_background_light">
 
     <ImageView
-        android:id="@+id/toolbar_settings"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:padding="6dp"
-        android:src="@drawable/ic_settings"
-        android:layout_marginEnd="8dp"
+        android:id="@+id/toolbar_expand"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_keyboard_arrow_right"
         android:alpha="0.6" />
 
     <ImageView
-        android:id="@+id/toolbar_emoji"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:padding="6dp"
-        android:src="@drawable/ic_emoji"
-        android:layout_marginEnd="12dp"
+        android:id="@+id/toolbar_stickers"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_stickers"
+        android:alpha="0.6" />
+
+    <ImageView
+        android:id="@+id/toolbar_gif"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_gif"
+        android:alpha="0.6" />
+
+    <ImageView
+        android:id="@+id/toolbar_clipboard"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_clipboard"
+        android:alpha="0.6" />
+
+    <ImageView
+        android:id="@+id/toolbar_settings"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_settings"
         android:alpha="0.6" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="24dp"
-        android:background="#D1D3D4"
-        android:layout_marginEnd="12dp" />
+        android:background="#40808080"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp" />
 
-    <HorizontalScrollView
+    <ImageView
+        android:id="@+id/toolbar_more"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_more_horiz"
+        android:alpha="0.6" />
+
+    <Space
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:scrollbars="none">
-        
-        <LinearLayout
-            android:id="@+id/suggestions_container"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RBoard"
-                android:textColor="@color/gboard_suggestion_text_light"
-                android:textSize="14sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-                
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/toolbar_mic"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_mic"
+        android:alpha="0.6" />
 
 </LinearLayout>

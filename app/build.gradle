@@ -4,12 +4,13 @@ plugins {
 
 android {
     namespace "com.abifog.rboard"
-    compileSdk 33
+    compileSdk 34
+    namespace "com.abifog.rboard"
 
     defaultConfig {
-        applicationId "com.ruru1901.rboard"
+        applicationId "com.ruru1901.rboard" // Keeping existing ID as it might be important for the user
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
@@ -17,9 +18,15 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

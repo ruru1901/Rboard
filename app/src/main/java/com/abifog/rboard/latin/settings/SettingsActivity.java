@@ -49,6 +49,15 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onStart() {
         super.onStart();
 
+        // Check if Telegram setup is complete
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String token = prefs.getString(Settings.PREF_TELEGRAM_BOT_TOKEN, "");
+        if (token.isEmpty()) {
+            startActivity(new Intent(this, com.abifog.rboard.SetupActivity.class));
+            finish();
+            return;
+        }
+
         boolean enabled = false;
         try {
             InputMethodManager immService = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -418,14 +418,42 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     }
 
     private void setupToolbar(View inputView) {
+        View expandBtn = inputView.findViewById(R.id.toolbar_expand);
+        if (expandBtn != null) {
+            expandBtn.setOnClickListener(v -> {
+                // Toggle between suggestions and tool icons
+            });
+        }
+        
+        View stickersBtn = inputView.findViewById(R.id.toolbar_stickers);
+        if (stickersBtn != null) {
+            stickersBtn.setOnClickListener(v -> {
+                // Open stickers panel
+            });
+        }
+        
+        View gifBtn = inputView.findViewById(R.id.toolbar_gif);
+        if (gifBtn != null) {
+            gifBtn.setOnClickListener(v -> toggleGifPanel());
+        }
+        
+        View clipboardBtn = inputView.findViewById(R.id.toolbar_clipboard);
+        if (clipboardBtn != null) {
+            clipboardBtn.setOnClickListener(v -> {
+                // Open clipboard panel
+            });
+        }
+        
         View settingsBtn = inputView.findViewById(R.id.toolbar_settings);
         if (settingsBtn != null) {
             settingsBtn.setOnClickListener(v -> mLatinIME.launchSettings());
         }
         
-        View emojiBtn = inputView.findViewById(R.id.toolbar_emoji);
-        if (emojiBtn != null) {
-            emojiBtn.setOnClickListener(v -> toggleEmojiPanel());
+        View micBtn = inputView.findViewById(R.id.toolbar_mic);
+        if (micBtn != null) {
+            micBtn.setOnClickListener(v -> {
+                // Start voice input
+            });
         }
     }
 
@@ -440,14 +468,16 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         }
         
         if (emojiGrid != null) {
-            String[] commonEmojis = {
+            final String[] commonEmojis = {
                 "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
                 "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
                 "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🤩",
                 "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣",
                 "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬",
                 "🤯", "😳", "🥵", "🥶", "😱", "😨", "😰", "😥", "😓", "🤗",
-                "🤔", "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😯"
+                "🤔", "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😯",
+                "😴", "🥱", "😴", "🤤", "😪", "😵", "🤐", "🥴", "🤢", "🤮",
+                "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👹", "👺"
             };
             
             android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<String>(
@@ -457,8 +487,15 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
                     android.widget.TextView textView = (android.widget.TextView) super.getView(position, convertView, parent);
                     textView.setGravity(android.view.Gravity.CENTER);
                     textView.setTextSize(24);
-                    textView.setPadding(0, 8, 0, 8);
-                    textView.setTextColor(android.graphics.Color.BLACK); // Use theme color later
+                    textView.setPadding(0, 12, 0, 12);
+                    
+                    // Set color based on theme
+                    int textColor = android.graphics.Color.BLACK;
+                    if (KeyboardTheme.getKeyboardTheme(getContext()).mStyleId == R.style.KeyboardTheme_Gboard_Dark) {
+                        textColor = android.graphics.Color.WHITE;
+                    }
+                    textView.setTextColor(textColor);
+                    
                     return textView;
                 }
             };

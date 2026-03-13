@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Gboard Premium Light Theme -->
+    <style name="KeyboardTheme.Gboard_Light" parent="KeyboardIcons.LXX_Light">
+        <item name="inputViewStyle">@style/InputView</item>
+        <item name="keyboardStyle">@style/Keyboard.Gboard_Light</item>
+        <item name="keyboardViewStyle">@style/KeyboardView.Gboard_Light</item>
+        <item name="mainKeyboardViewStyle">@style/MainKeyboardView.Gboard_Light</item>
+        <item name="moreKeysKeyboardStyle">@style/MoreKeysKeyboard.LXX_Light</item>
+        <item name="moreKeysKeyboardViewStyle">@style/MoreKeysKeyboardView.LXX_Light</item>
+    </style>
+    <style name="Keyboard.Gboard_Light" parent="Keyboard">
+        <item name="themeId">GboardLight</item>
+    </style>
+    <style name="KeyboardView.Gboard_Light" parent="KeyboardView">
+        <item name="android:background">@color/gboard_background_light</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_gboard_light</item>
+        <item name="functionalKeyBackground">@drawable/btn_keyboard_key_pill_light</item>
+        <item name="spacebarBackground">@drawable/btn_keyboard_key_gboard_light</item>
+        <item name="keyTextColor">@color/gboard_key_text_light</item>
+        <item name="keyTextInactivatedColor">#803C4043</item>
+        <item name="functionalTextColor">@color/gboard_key_text_light</item>
+        <item name="keyHintLetterColor">#803C4043</item>
+        <item name="keyHintLabelColor">#803C4043</item>
+        <item name="keyPreviewTextColor">@color/gboard_key_text_light</item>
+    </style>
+    <style name="MainKeyboardView.Gboard_Light" parent="KeyboardView.Gboard_Light">
+        <item name="keyPreviewBackground">@drawable/keyboard_key_feedback_background_lxx_light</item>
+        <item name="keyPreviewHeight">@dimen/config_key_preview_height_lxx</item>
+        <item name="keyPreviewOffset">@dimen/config_key_preview_offset_lxx</item>
+        <item name="keyPreviewDismissAnimator">@anim/key_preview_dismiss_lxx</item>
+        <item name="slidingKeyInputPreviewColor">@color/gboard_accent_color_light</item>
+        <item name="languageOnSpacebarTextColor">#803C4043</item>
+    </style>
+
+    <!-- Gboard Premium Dark Theme -->
+    <style name="KeyboardTheme.Gboard_Dark" parent="KeyboardIcons.LXX_Dark">
+        <item name="inputViewStyle">@style/InputView</item>
+        <item name="keyboardStyle">@style/Keyboard.Gboard_Dark</item>
+        <item name="keyboardViewStyle">@style/KeyboardView.Gboard_Dark</item>
+        <item name="mainKeyboardViewStyle">@style/MainKeyboardView.Gboard_Dark</item>
+        <item name="moreKeysKeyboardStyle">@style/MoreKeysKeyboard.LXX_Dark</item>
+        <item name="moreKeysKeyboardViewStyle">@style/MoreKeysKeyboardView.LXX_Dark</item>
+    </style>
+    <style name="Keyboard.Gboard_Dark" parent="Keyboard">
+        <item name="themeId">GboardDark</item>
+    </style>
+    <style name="KeyboardView.Gboard_Dark" parent="KeyboardView">
+        <item name="android:background">@color/gboard_background_dark</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_gboard_dark</item>
+        <item name="functionalKeyBackground">@drawable/btn_keyboard_key_pill_dark</item>
+        <item name="spacebarBackground">@drawable/btn_keyboard_key_gboard_dark</item>
+        <item name="keyTextColor">@color/gboard_key_text_dark</item>
+        <item name="keyTextInactivatedColor">#80E8EAED</item>
+        <item name="functionalTextColor">@color/gboard_key_text_dark</item>
+        <item name="keyHintLetterColor">#80E8EAED</item>
+        <item name="keyHintLabelColor">#80E8EAED</item>
+        <item name="keyPreviewTextColor">@color/gboard_key_text_dark</item>
+    </style>
+    <style name="MainKeyboardView.Gboard_Dark" parent="KeyboardView.Gboard_Dark">
+        <item name="keyPreviewBackground">@drawable/keyboard_key_feedback_background_lxx_dark</item>
+        <item name="keyPreviewHeight">@dimen/config_key_preview_height_lxx</item>
+        <item name="keyPreviewOffset">@dimen/config_key_preview_offset_lxx</item>
+        <item name="keyPreviewDismissAnimator">@anim/key_preview_dismiss_lxx</item>
+        <item name="slidingKeyInputPreviewColor">@color/gboard_accent_color_dark</item>
+        <item name="languageOnSpacebarTextColor">#80E8EAED</item>
+    </style>
+</resources>
