@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace "com.ruru1901.rboard"
+    namespace "com.abifog.rboard"
     compileSdk 33
 
     defaultConfig {
