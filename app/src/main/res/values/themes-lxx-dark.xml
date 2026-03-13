@@ -38,18 +38,18 @@
         name="KeyboardView.LXX_Dark"
         parent="KeyboardView"
     >
-        <item name="android:background">#263238</item>
-        <item name="keyBackground">@drawable/btn_keyboard_key_lxx_dark</item>
-        <item name="functionalKeyBackground">@drawable/btn_keyboard_key_functional_lxx_dark</item>
-        <item name="spacebarBackground">@drawable/btn_keyboard_spacebar_lxx_dark</item>
-        <item name="keyTextColor">@color/key_text_color_lxx_dark</item>
-        <item name="keyTextInactivatedColor">@color/key_functional_text_color_lxx_dark</item>
-        <item name="functionalTextColor">@color/key_text_color_lxx_dark</item>
-        <item name="keyHintLetterColor">@color/key_hint_letter_color_lxx_dark</item>
-        <item name="keyHintLabelColor">@color/key_text_inactive_color_lxx_dark</item>
-        <item name="keyShiftedLetterHintInactivatedColor">@color/key_text_inactive_color_lxx_dark</item>
-        <item name="keyShiftedLetterHintActivatedColor">@color/key_text_color_lxx_dark</item>
-        <item name="keyPreviewTextColor">@color/key_text_color_lxx_dark</item>
+        <item name="android:background">@color/gboard_background_dark</item>
+        <item name="keyBackground">@drawable/btn_keyboard_key_gboard_dark</item>
+        <item name="functionalKeyBackground">@drawable/btn_keyboard_key_pill_dark</item>
+        <item name="spacebarBackground">@drawable/btn_keyboard_key_gboard_dark</item>
+        <item name="keyTextColor">@color/gboard_key_text_dark</item>
+        <item name="keyTextInactivatedColor">#80E8EAED</item>
+        <item name="functionalTextColor">@color/gboard_key_text_dark</item>
+        <item name="keyHintLetterColor">#80E8EAED</item>
+        <item name="keyHintLabelColor">#80E8EAED</item>
+        <item name="keyShiftedLetterHintInactivatedColor">#80E8EAED</item>
+        <item name="keyShiftedLetterHintActivatedColor">@color/gboard_key_text_dark</item>
+        <item name="keyPreviewTextColor">@color/gboard_key_text_dark</item>
     </style>
     <style
         name="MainKeyboardView.LXX_Dark"
@@ -59,8 +59,8 @@
         <item name="keyPreviewHeight">@dimen/config_key_preview_height_lxx</item>
         <item name="keyPreviewOffset">@dimen/config_key_preview_offset_lxx</item>
         <item name="keyPreviewDismissAnimator">@anim/key_preview_dismiss_lxx</item>
-        <item name="slidingKeyInputPreviewColor">@color/sliding_key_input_preview_color_lxx_dark</item>
-        <item name="languageOnSpacebarTextColor">@color/key_text_inactive_color_lxx_dark</item>
+        <item name="slidingKeyInputPreviewColor">@color/gboard_accent_color_dark</item>
+        <item name="languageOnSpacebarTextColor">#80E8EAED</item>
     </style>
     <style
         name="MoreKeysKeyboard.LXX_Dark"
@@ -76,7 +76,7 @@
     >
         <item name="android:background">@drawable/keyboard_popup_panel_background_lxx_dark</item>
         <item name="keyBackground">@drawable/btn_keyboard_key_popup_lxx_dark</item>
-        <item name="keyTypeface">normal</item>
+        <item name="keyTypeface">sans-serif-medium</item>
         <item name="verticalCorrection">@dimen/config_more_keys_keyboard_vertical_correction_holo</item>
     </style>
 </resources>

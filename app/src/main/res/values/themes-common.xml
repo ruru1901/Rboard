@@ -34,7 +34,7 @@
         <item name="maxMoreKeysColumn">@integer/config_max_more_keys_column</item>
     </style>
     <style name="KeyboardView">
-        <item name="keyTypeface">normal</item>
+        <item name="keyTypeface">sans-serif-medium</item>
         <!-- A negative value to disable key text shadow layer. -->
         <item name="keyTextShadowRadius">-1.0</item>
         <item name="keyHintLetterPadding">@dimen/config_key_hint_letter_padding</item>

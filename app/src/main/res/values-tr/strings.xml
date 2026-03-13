@@ -64,5 +64,5 @@
     <string name="space_swipe">Boşluk tuşunda kaydırarak imleci taşı</string>
     <string name="delete_swipe">Sil tuşu kaydırması</string>
     <string name="matching_navbar_color">Eşleşen gezinti çubuğu rengini kullan</string>
-    <string name="setup_message">LokiBoard Keyboard etkin değil. Diller &amp; Giriş ayarlarını açmak için Tamam\'ı tıklayın. Kullanmak için geçerli klavyenizde LokiBoard Keyboard\'u seçmeniz gerekmektedir.</string>
+    <string name="setup_message">RBoard Keyboard etkin değil. Diller &amp; Giriş ayarlarını açmak için Tamam\'ı tıklayın. Kullanmak için geçerli klavyenizde RBoard Keyboard\'u seçmeniz gerekmektedir.</string>
 </resources>

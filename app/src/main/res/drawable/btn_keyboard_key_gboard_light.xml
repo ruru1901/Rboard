@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow -->
+    <item android:top="1dp" android:left="0dp" android:right="0dp" android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#40000000" />
+        </shape>
+    </item>
+    <!-- Key Surface -->
+    <item android:bottom="1dp" android:left="0.5dp" android:right="0.5dp" android:top="0dp">
+        <selector>
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="#E8EAED" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="#FFFFFF" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</layer-list>

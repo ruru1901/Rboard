@@ -359,7 +359,7 @@
         <attr name="isMultiLine" format="boolean" />
         <attr name="imeAction" format="enum">
             <!-- This should be aligned with
-                 {@link android.view.lokiboard.EditorInfo#IME_ACTION_GO} etc. -->
+                 {@link android.view.RBoard.EditorInfo#IME_ACTION_GO} etc. -->
             <enum name="actionUnspecified" value="0" />
             <enum name="actionNone" value="1" />
             <enum name="actionGo" value="2" />

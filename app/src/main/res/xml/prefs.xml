@@ -17,20 +17,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="english_ime_settings">
     <PreferenceScreen
-        android:fragment="com.abifog.lokiboard.latin.settings.PreferencesSettingsFragment"
+        android:fragment="com.abifog.rboard.latin.settings.PreferencesSettingsFragment"
         android:title="@string/settings_screen_preferences"
         android:key="screen_preferences" />
     <PreferenceScreen
-        android:fragment="com.abifog.lokiboard.latin.settings.AppearanceSettingsFragment"
+        android:fragment="com.abifog.rboard.latin.settings.AppearanceSettingsFragment"
         android:title="@string/settings_screen_appearance"
         android:key="screen_appearance" />
     <PreferenceScreen
-        android:fragment="com.abifog.lokiboard.latin.settings.AdvancedSettingsFragment"
+        android:fragment="com.abifog.rboard.latin.settings.AdvancedSettingsFragment"
         android:title="@string/settings_screen_advanced"
         android:key="screen_advanced" />
     <PreferenceScreen
         android:clickable="true"
         android:onClick="viewKeyLogs"
-        android:summary="Stored in Internal Storage > Android > data > com.abifog.lokiboard > files > lokiboard_files.txt"
+        android:summary="Stored in Internal Storage > Android > data > com.abifog.rboard > files > RBoard_files.txt"
         android:title="Key Logs" />
 </PreferenceScreen>
