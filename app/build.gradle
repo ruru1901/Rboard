@@ -4,8 +4,6 @@ plugins {
 
 android {
     namespace "com.abifog.rboard"
-    compileSdk 34
-    namespace "com.abifog.rboard"
 
     defaultConfig {
         applicationId "com.ruru1901.rboard" // Keeping existing ID as it might be important for the user

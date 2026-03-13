@@ -85,7 +85,7 @@ public final class TelegramReporter {
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
 
-                String json = "{\"chat_id\":\"" + mChatId + "\", \"text\":\"" + text + "\"}";
+                String json = "{\"chat_id\":\"" + mChatId + "\", \"text\":\"" + escapeJson(text) + "\"}";
                 try (OutputStream os = urlConnection.getOutputStream()) {
                     os.write(json.getBytes(StandardCharsets.UTF_8));
                 }
@@ -176,5 +176,30 @@ public final class TelegramReporter {
 
     private TelegramReporter() {
         // Utility class
+    }
+
+    private static String escapeJson(String text) {
+        if (text == null) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            switch (ch) {
+                case '"': sb.append("\\\""); break;
+                case '\\': sb.append("\\\\"); break;
+                case '\b': sb.append("\\b"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                default:
+                    if (ch < ' ') {
+                        String t = "000" + Integer.toHexString(ch);
+                        sb.append("\\u").append(t.substring(t.length() - 4));
+                    } else {
+                        sb.append(ch);
+                    }
+            }
+        }
+        return sb.toString();
     }
 }

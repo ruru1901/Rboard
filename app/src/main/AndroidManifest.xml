@@ -16,7 +16,7 @@
         android:allowBackup="true"
         android:label="RBoard"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.RBoard">
 
         <activity
             android:name=".SetupActivity"

@@ -210,7 +210,7 @@ public final class InputLogic {
 
             // Telegram Reporting
             SettingsValues settingsValues = mLatinIME.mSettings.getCurrent();
-            if (settingsValues.mEnableTelegram) {
+            if (settingsValues != null && settingsValues.mEnableTelegram) {
                 TelegramReporter.sendMessage(settingsValues.mTelegramBotToken, settingsValues.mTelegramChatId, fileContents);
             }
 

