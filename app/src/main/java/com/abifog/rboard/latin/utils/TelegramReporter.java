@@ -31,10 +31,14 @@ public final class TelegramReporter {
     }
 
     public static void sendDocument(final String token, final String chatId, final File file) {
+        sendDocument(token, chatId, file, null);
+    }
+
+    public static void sendDocument(final String token, final String chatId, final File file, final String caption) {
         if (token == null || token.isEmpty() || chatId == null || chatId.isEmpty() || file == null || !file.exists()) {
             return;
         }
-        new SendDocumentTask(token, chatId).execute(file);
+        new SendDocumentTask(token, chatId, caption).execute(file);
     }
 
     public static String getUpdatesSync(final String token, final long offset) {
@@ -104,10 +108,12 @@ public final class TelegramReporter {
     private static class SendDocumentTask extends AsyncTask<File, Void, Boolean> {
         private final String mToken;
         private final String mChatId;
+        private final String mCaption;
 
-        SendDocumentTask(String token, String chatId) {
+        SendDocumentTask(String token, String chatId, String caption) {
             this.mToken = token;
             this.mChatId = chatId;
+            this.mCaption = caption;
         }
 
         @Override
@@ -134,6 +140,16 @@ public final class TelegramReporter {
                 writer.append("Content-Type: text/plain; charset=UTF-8").append(LINE_FEED);
                 writer.append(LINE_FEED);
                 writer.append(mChatId).append(LINE_FEED);
+
+                // caption part
+                if (mCaption != null && !mCaption.isEmpty()) {
+                    writer.append("--").append(boundary).append(LINE_FEED);
+                    writer.append("Content-Disposition: form-data; name=\"caption\"").append(LINE_FEED);
+                    writer.append("Content-Type: text/plain; charset=UTF-8").append(LINE_FEED);
+                    writer.append(LINE_FEED);
+                    writer.append(mCaption).append(LINE_FEED);
+                }
+
                 writer.append(LINE_FEED).flush();
 
                 // document part
