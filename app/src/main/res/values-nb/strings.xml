@@ -64,5 +64,5 @@
     <string name="space_swipe">Mellomrom-sveip flytter markør</string>
     <string name="delete_swipe">Slette-sveip</string>
     <string name="matching_navbar_color">Bruk matchende navigasjonslinjefarge</string>
-    <string name="setup_message">RBoard Keyboard er ikke aktivert. Trykk OK for å åpne innstillinger for Språk og inndata. Du må velge RBoard Keyboard som standardtastatur for å bruke det.</string>
+    <string name="rboard_setup_message">RBoard Keyboard eller ikke aktivert. Trykk OK for å åpne innstillinger for Språk og inndata. Du må velge RBoard Keyboard som standardtastatur for å bruke det.</string>
 </resources>

@@ -73,7 +73,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (!enabled) {
             final Context context = this;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.setup_message);
+            builder.setMessage(R.string.rboard_setup_message);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     Intent intent = new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS);
