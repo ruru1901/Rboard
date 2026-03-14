@@ -16,6 +16,7 @@
 ** See the License for the specific language governing permissions and
 ** limitations under the License.
 */
+-->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="rboard_setup_title">RBoard Setup</string>
     <string name="rboard_setup_step1">Step 1: Telegram API configuration</string>
