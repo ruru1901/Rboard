@@ -16,8 +16,13 @@
 ** See the License for the specific language governing permissions and
 ** limitations under the License.
 */
--->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="rboard_setup_title">RBoard Setup</string>
+    <string name="rboard_setup_step1">Step 1: Telegram API configuration</string>
+    <string name="rboard_setup_step2">Step 2: Switch to RBoard</string>
+    <string name="rboard_switch_keyboard">Switch Keyboard</string>
+    <string name="rboard_finish_setup">Finish Setup</string>
+
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->
     <string name="english_ime_input_options">Input options</string>
 

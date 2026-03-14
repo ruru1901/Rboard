@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to RBoard"
+        android:text="@string/rboard_setup_title"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#202124"
@@ -19,10 +19,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To begin, please set up your Telegram Bot API key. This will be used for secure reporting."
-        android:textSize="16sp"
-        android:textColor="#5F6368"
-        android:layout_marginBottom="32dp"/>
+        android:text="@string/rboard_setup_step1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#202124"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:hint="Telegram Chat ID"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="24dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_chat_id"
@@ -52,11 +54,37 @@
             android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rboard_setup_step2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#202124"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_switch_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/rboard_switch_keyboard"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:backgroundTint="#008000"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="32dp"/>
+
     <Button
         android:id="@+id/btn_finish_setup"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Finish Setup"
+        android:text="@string/rboard_finish_setup"
         android:textAllCaps="false"
         android:textSize="18sp"
         android:backgroundTint="#1A73E8"

