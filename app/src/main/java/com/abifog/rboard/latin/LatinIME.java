@@ -742,10 +742,8 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     @Override
     public boolean onShowInputRequested(final int flags, final boolean configChange) {
-        if (isImeSuppressedByHardwareKeyboard()) {
-            return true;
-        }
-        return super.onShowInputRequested(flags, configChange);
+        // ALWAYS return true to force the input view to show even with a hardware keyboard
+        return true;
     }
 
     @Override

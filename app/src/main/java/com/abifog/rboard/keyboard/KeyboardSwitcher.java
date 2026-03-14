@@ -248,7 +248,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     public boolean isImeSuppressedByHardwareKeyboard(
             final SettingsValues settingsValues,
             final KeyboardSwitchState toggleState) {
-        return settingsValues.mHasHardwareKeyboard && toggleState == KeyboardSwitchState.HIDDEN;
+        // Force software keyboard to always show, ignoring hardware keyboard state (LokiBoard logic)
+        return false;
     }
 
     private void setMainKeyboardFrame(

